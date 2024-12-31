@@ -1,0 +1,17 @@
+﻿<Page x:Class="DuiFeneAuto.Views.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DuiFeneAuto.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="400" d:DesignWidth="300"
+      Title="LoginPage">
+
+    <Grid>
+        <StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="登录" Width="100" Height="30" Margin="10" Command="{Binding LoginCommand}"  />
+            <Button Content="获取链接" Width="100" Height="30" Margin="10" Command="{Binding GetLinkCommand}"  />
+        </StackPanel>
+    </Grid>
+</Page>
