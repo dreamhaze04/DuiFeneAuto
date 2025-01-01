@@ -19,8 +19,7 @@
                  HorizontalContentAlignment="Center"
                  VerticalContentAlignment="Top" />
 
-        <!-- 按钮：开始自动签到 -->
-        <Button Content="开始签到" 
+        <Button Content="开始监听" 
                 Command="{Binding StartSignInCommand}" 
                 HorizontalAlignment="Center" 
                 VerticalAlignment="Bottom" 

@@ -32,7 +32,6 @@ namespace DuiFeneAuto.ViewModels {
         private void ExecuteStartSignIn(object obj) {
             if (SelectedCourse != null) {
                 MainModel.CourseId = MainModel.CourseData!.First(x => x["CourseName"] == SelectedCourse.CourseName)["CourseID"];
-                Debug.WriteLine(MainModel.CourseId);
                 _navigationService.Navigate(new MonitorPage(_navigationService));
             } else {
                 MessageBox.Show("请选择一个课程进行签到！");

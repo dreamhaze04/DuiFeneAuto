@@ -65,13 +65,10 @@ namespace DuiFeneAuto.Models {
             Client.DefaultRequestHeaders.Remove("Referer");
             Client.DefaultRequestHeaders.Add("Referer", "https://www.duifene.com/_UserCenter/MB/index.aspx");
             if (_courseId != null) {
-                Debug.WriteLine($"{_courseId}");
             } else {
-                Debug.WriteLine("_courseId is null");
                 return false;
             }
             var response = await Client.GetAsync($"https://www.duifene.com/_UserCenter/MB/Module.aspx?data={_courseId}");
-            Debug.WriteLine(await response.Content.ReadAsStringAsync());
             if (response.IsSuccessStatusCode) {
                 var html = await response.Content.ReadAsStringAsync();
                 if (html.Contains(_courseId!)) {
@@ -142,8 +139,7 @@ namespace DuiFeneAuto.Models {
                 using var doc = JsonDocument.Parse(jsonString);
                 var root = doc.RootElement;
                 string? msgbox = root.GetProperty("msgbox").GetString();
-                //return msgbox == "签到成功！";
-                return true;
+                return msgbox == "签到成功！";
             }
             return false;
         }
@@ -163,10 +159,7 @@ namespace DuiFeneAuto.Models {
                 using var doc = JsonDocument.Parse(jsonString);
                 var root = doc.RootElement;
                 string? msgbox = root.GetProperty("msgbox").GetString();
-                Debug.WriteLine(msgbox);
-                MessageBox.Show(msgbox);
-                //return msgbox == "签到成功！";
-                return true;
+                return msgbox == "签到成功！";
             }
             return false;
         }
@@ -178,9 +171,22 @@ namespace DuiFeneAuto.Models {
                 var doc = new HtmlDocument();
                 doc.LoadHtml(html);
                 var msg = doc.GetElementbyId("DivOK").InnerText;
-                return true;
+                if (msg.Contains("签到成功")) {
+                    return true;
+                }
             }
             return false;
+        }
+        public static async Task<string> GetCode() {
+            var response = await Client.GetAsync($"https://www.duifene.com/_CheckIn/MB/TeachCheckIn.aspx?classid={_classId}&temps=0&checktype=1&isrefresh=0&timeinterval=0&roomid=0&match=");
+            if (response.IsSuccessStatusCode) {
+                var html = await response.Content.ReadAsStringAsync();
+                var doc = new HtmlDocument();
+                doc.LoadHtml(html);
+                var code = doc.GetElementbyId("HFCheckCodeKey")?.GetAttributeValue("value", null);
+                return code!;
+            }
+            return "";
         }
     }
 }
