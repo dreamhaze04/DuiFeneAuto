@@ -12,6 +12,8 @@ using HtmlAgilityPack;
 using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
+using System.Diagnostics.CodeAnalysis;
+using System.DirectoryServices.ActiveDirectory;
 namespace DuiFeneAuto.Models {
     public class MainModel {
         private const string UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3";
@@ -29,10 +31,21 @@ namespace DuiFeneAuto.Models {
             }
         };
         public static async Task<bool> ExecuteLogin(object parameter) {
-            string? userLink = parameter as string;
+            if (parameter == null) {
+                return false;
+            }
+            string userLink = (string)parameter;
             string pattern = "code=.*?&state=";
+            var match = Regex.Match(userLink, pattern);
+            if (!match.Success) {
+                return false;
+            }
             string code = Regex.Match(userLink!, pattern).Value.Replace("code=", "").Replace("&state=", "");
             var response = await Client.GetAsync($"https://www.duifene.com/P.aspx?authtype=1&code={code}&state=1");
+            string html = await response.Content.ReadAsStringAsync();
+            if (html.Contains("window.location='/_UserCenter/MB/LostInfo.aspx'")) {
+                return false;
+            }
             return true;
         }
         public static async Task GetClassJson() {
@@ -45,7 +58,6 @@ namespace DuiFeneAuto.Models {
             var response = await Client.PostAsync($"https://www.duifene.com/_UserCenter/CourseInfo.ashx", content);
             if (response.IsSuccessStatusCode) {
                 var jsonString = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(jsonString);
                 CourseData = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(jsonString);
             }
         }
@@ -73,7 +85,6 @@ namespace DuiFeneAuto.Models {
         }
         public static async Task<string?> GetChecktype() {
             var response = await Client.GetAsync($"https://www.duifene.com/_CheckIn/MB/TeachCheckIn.aspx?classid={_classId}&temps=0&checktype=1&isrefresh=0&timeinterval=0&roomid=0&match=");
-            Debug.WriteLine("监听中");
             if (response.IsSuccessStatusCode) {
                 var html = await response.Content.ReadAsStringAsync();
                 if (html.Contains("HFCheck")) {
@@ -131,9 +142,8 @@ namespace DuiFeneAuto.Models {
                 using var doc = JsonDocument.Parse(jsonString);
                 var root = doc.RootElement;
                 string? msgbox = root.GetProperty("msgbox").GetString();
-                Debug.WriteLine(msgbox);
-                MessageBox.Show(msgbox);
-                return msgbox == "签到成功！";
+                //return msgbox == "签到成功！";
+                return true;
             }
             return false;
         }
@@ -155,7 +165,8 @@ namespace DuiFeneAuto.Models {
                 string? msgbox = root.GetProperty("msgbox").GetString();
                 Debug.WriteLine(msgbox);
                 MessageBox.Show(msgbox);
-                return msgbox == "签到成功！";
+                //return msgbox == "签到成功！";
+                return true;
             }
             return false;
         }
@@ -173,6 +184,3 @@ namespace DuiFeneAuto.Models {
         }
     }
 }
-
-
-

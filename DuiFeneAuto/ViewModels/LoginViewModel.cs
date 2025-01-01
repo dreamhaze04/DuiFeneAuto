@@ -29,7 +29,7 @@ namespace DuiFeneAuto.ViewModels
                 await MainModel.GetClassJson();
                 _navigationService.Navigate(new CoursePage(_navigationService));
             } else {
-                MessageBox.Show("登录失败，请检查链接！");
+                MessageBox.Show("登录失败，请尝试重新获取链接！");
             }
         }
         private void ExecuteGetLink(object? obj) {
