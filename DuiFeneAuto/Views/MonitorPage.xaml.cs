@@ -13,20 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DuiFeneAuto.ViewModels;
-namespace DuiFeneAuto.Views
-{
+namespace DuiFeneAuto.Views {
     /// <summary>
     /// MonitorPage.xaml 的交互逻辑
     /// </summary>
-    public partial class MonitorPage : Page
-    {
+    public partial class MonitorPage : Page {
         public MonitorViewModel ViewModel { get; set; }
-        public MonitorPage(NavigationService navigationService)
-        {
+        public MonitorPage(NavigationService navigationService) {
             InitializeComponent();
             ViewModel = new MonitorViewModel(navigationService);
             this.DataContext = ViewModel;
-
             this.Loaded += MonitorPage_Loaded;
         }
 

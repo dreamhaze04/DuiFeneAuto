@@ -14,7 +14,7 @@ using DuiFeneAuto.Models;
 namespace DuiFeneAuto.ViewModels
 {
     public class MonitorViewModel : INotifyPropertyChanged {
-        private string? _textBlockText;
+        private string? _textBlockText = "test";
         public ICommand SignCommand { get; }
         private string? _code;
         public  string? Code {
@@ -39,7 +39,7 @@ namespace DuiFeneAuto.ViewModels
         public MonitorViewModel(NavigationService navigationService) {
             _navigationService = navigationService;
             SignCommand = new RelayCommand(ExecuteSign, () => { return Code != null; });
-            _textBlockText = "测试";
+            TextBlockText = "测试";
         }
         public async Task StartListeningAsync() {
             if (await MainModel.Monitor()) {
@@ -48,6 +48,7 @@ namespace DuiFeneAuto.ViewModels
                     if (Code != null) {
                         TextBlockText = "获取到签到码\n" + Code;
                         Debug.WriteLine(Code);
+                        Debug.WriteLine(TextBlockText);
                     } else {
                         _textBlockText = "监听中";
                         Debug.WriteLine("code is null");
